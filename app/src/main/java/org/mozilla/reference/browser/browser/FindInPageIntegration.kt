@@ -7,6 +7,7 @@ package org.mozilla.reference.browser.browser
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
+import android.view.ViewStub
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import mozilla.components.browser.state.selector.findCustomTabOrSelectedTab
 import mozilla.components.browser.state.store.BrowserStore
@@ -21,35 +22,43 @@ import mozilla.components.support.base.feature.UserInteractionHandler
 class FindInPageIntegration(
     private val store: BrowserStore,
     private val sessionId: String? = null,
-    private val view: FindInPageView,
-    engineView: EngineView
+    private val viewStub: ViewStub,
+    private val engineView: EngineView
 ) : LifecycleAwareFeature, UserInteractionHandler {
-    private val feature = FindInPageFeature(store, view, engineView, ::onClose)
+    private var feature: FindInPageFeature? = null
+    private var view: FindInPageBar? = null
 
     override fun start() {
-        feature.start()
-
+        feature?.start()
         FindInPageIntegration.launch = this::launch
     }
 
     override fun stop() {
-        feature.stop()
-
+        feature?.stop()
         FindInPageIntegration.launch = null
     }
 
     override fun onBackPressed(): Boolean {
-        return feature.onBackPressed()
+        return feature?.onBackPressed() ?: false
     }
 
     private fun onClose() {
-        view.asView().visibility = View.GONE
+        view?.asView()?.visibility = View.GONE
     }
 
     private fun launch() {
         store.state.findCustomTabOrSelectedTab(sessionId)?.let {
-            view.asView().visibility = View.VISIBLE
-            feature.bind(it)
+            if(view == null){
+                view = (viewStub.inflate() as FindInPageBar).also {
+                    val params = it.layoutParams as CoordinatorLayout.LayoutParams
+                    params.behavior = FindInPageBarBehavior()
+                    it.requestLayout()
+                    feature = FindInPageFeature(store, it, engineView, ::onClose)
+                    feature?.start()
+                }
+            }
+            view?.asView()?.visibility = View.VISIBLE
+            feature?.bind(it)
         }
     }
 
@@ -68,10 +77,8 @@ class FindInPageIntegration(
  * when the browser toolbar is scrolling or performing a snap animation).
  */
 @Suppress("unused") // Referenced from XML
-class FindInPageBarBehavior(
-    context: Context,
-    attrs: AttributeSet
-) : CoordinatorLayout.Behavior<FindInPageBar>(context, attrs) {
+class FindInPageBarBehavior
+    : CoordinatorLayout.Behavior<FindInPageBar>() {
     override fun layoutDependsOn(parent: CoordinatorLayout, child: FindInPageBar, dependency: View): Boolean {
         if (dependency is BrowserToolbar) {
             return true

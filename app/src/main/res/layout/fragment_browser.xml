@@ -44,9 +44,11 @@
         mozac:awesomeBarDescriptionTextColor="#dddddd"
         mozac:awesomeBarChipTextColor="#ffffff"
         mozac:awesomeBarChipBackgroundColor="#444444" />
-
-    <mozilla.components.feature.findinpage.view.FindInPageBar
-        android:id="@+id/findInPageBar"
+    
+    <ViewStub
+        android:id="@+id/findInPageBarStub"
+        android:inflatedId="@+id/findInPageBar"
+        android:layout="@layout/fragment_browser_find_in_page_bar"
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:layout_gravity="bottom"
@@ -55,8 +57,7 @@
         mozac:findInPageQueryHintTextColor="#dddddd"
         mozac:findInPageResultCountTextColor="#ff88ff"
         mozac:findInPageButtonsTint="#ff88ff"
-        android:visibility="gone"
-        app:layout_behavior="org.mozilla.reference.browser.browser.FindInPageBarBehavior" />
+        android:visibility="gone"/>
 
     <mozilla.components.browser.toolbar.BrowserToolbar
         android:id="@+id/toolbar"
@@ -78,7 +79,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         />
-    
+
     <ViewStub
         android:id="@+id/stubReaderViewButton"
         android:layout="@layout/fragment_browser_reader_view_button"

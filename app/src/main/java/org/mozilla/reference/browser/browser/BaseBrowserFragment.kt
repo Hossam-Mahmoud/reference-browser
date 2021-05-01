@@ -79,8 +79,8 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
         get() = requireView().findViewById<View>(R.id.engineView) as EngineView
     private val toolbar: BrowserToolbar
         get() = requireView().findViewById(R.id.toolbar)
-    private val findInPageBar: FindInPageBar
-        get() = requireView().findViewById(R.id.findInPageBar)
+    private val findInPageBarStub: ViewStub
+        get() = requireView().findViewById(R.id.findInPageBarStub)
     private val swipeRefresh: SwipeRefreshLayout
         get() = requireView().findViewById(R.id.swipeRefresh)
 
@@ -226,7 +226,7 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
             feature = FindInPageIntegration(
                 requireComponents.core.store,
                 sessionId,
-                findInPageBar as FindInPageView,
+                findInPageBarStub,
                 engineView),
             owner = this,
             view = view)

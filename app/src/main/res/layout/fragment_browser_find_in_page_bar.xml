@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mozilla.components.feature.findinpage.view.FindInPageBar
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:mozac="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="56dp"
+    android:layout_gravity="bottom"
+    android:background="#000000"
+    mozac:findInPageQueryTextColor="#ffffff"
+    mozac:findInPageQueryHintTextColor="#dddddd"
+    mozac:findInPageResultCountTextColor="#ff88ff"
+    mozac:findInPageButtonsTint="#ff88ff" />
