@@ -85,10 +85,7 @@ class ReaderViewIntegration(
  * the [FindInPageBar] (including when the browser toolbar is scrolling or performing a snap animation).
  */
 @Suppress("unused") // Referenced from XML
-class ReaderViewAppearanceButtonBehavior(
-    context: Context,
-    attrs: AttributeSet
-) : CoordinatorLayout.Behavior<FloatingActionButton>(context, attrs) {
+class ReaderViewAppearanceButtonBehavior : CoordinatorLayout.Behavior<FloatingActionButton>() {
     override fun layoutDependsOn(parent: CoordinatorLayout, child: FloatingActionButton, dependency: View): Boolean {
         if (dependency is FindInPageBar || dependency is BrowserToolbar) {
             return true

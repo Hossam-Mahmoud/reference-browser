@@ -11,23 +11,27 @@
     android:layout_height="match_parent"
     tools:context=".BrowserActivity">
 
-    <androidx.compose.ui.platform.ComposeView
-        android:id="@+id/compose_view"
+    <ViewStub
+        android:id="@+id/stub_compose_view"
+        android:layout="@layout/fragment_browser_compose_view"
+        android:inflatedId="@+id/compose_view"
         android:layout_width="match_parent"
-        android:layout_gravity="top"
-        android:background="#ffffcc00"
-        android:layout_marginBottom="@dimen/browser_toolbar_height"
         android:layout_height="@dimen/browser_toolbar_height"
-        android:visibility="gone" />
+        android:layout_gravity="top"
+        android:layout_marginBottom="@dimen/browser_toolbar_height"
+        android:visibility="gone"
+        />
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <mozilla.components.concept.engine.EngineView
             android:id="@+id/engineView"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <mozilla.components.browser.awesomebar.BrowserAwesomeBar
@@ -64,25 +68,28 @@
         mozac:browserToolbarSuggestionForegroundColor="@color/toolbarSuggestionForeground"
         mozac:browserToolbarSuggestionBackgroundColor="@color/toolbarSuggestionBackground" />
 
-    <mozilla.components.feature.readerview.view.ReaderViewControlsBar
-        android:id="@+id/readerViewBar"
-        android:background="#FFFFFFFF"
+    <ViewStub
+        android:id="@+id/stubReaderViewBar"
+        android:layout="@layout/fragment_browser_reader_controls_bar"
+        android:inflatedId="@+id/readerViewBar"
         android:elevation="10dp"
         android:visibility="gone"
         android:layout_gravity="bottom"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/readerViewAppearanceButton"
+        android:layout_height="wrap_content"
+        />
+    
+    <ViewStub
+        android:id="@+id/stubReaderViewButton"
+        android:layout="@layout/fragment_browser_reader_view_button"
+        android:inflatedId="@+id/readerViewAppearanceButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
-        android:src="@drawable/mozac_ic_font"
         android:visibility="gone"
         android:layout_marginRight="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginBottom="16dp"
-        app:layout_behavior="org.mozilla.reference.browser.browser.ReaderViewAppearanceButtonBehavior" />
+        />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

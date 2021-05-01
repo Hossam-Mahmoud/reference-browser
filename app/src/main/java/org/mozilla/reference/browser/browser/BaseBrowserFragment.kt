@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewStub
 import androidx.annotation.CallSuper
 import androidx.compose.ui.platform.ComposeView
 import androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -287,8 +288,8 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
             )
         }
 
-        val composeView = view.findViewById<ComposeView>(R.id.compose_view)
         if (shouldUseComposeUI) {
+            val composeView: ComposeView = view.findViewById<ViewStub>(R.id.stub_compose_view).inflate() as ComposeView
             composeView.visibility = View.VISIBLE
             composeView.setContent { BrowserToolbar() }
 

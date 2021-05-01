@@ -37,6 +37,7 @@ android {
     buildTypes {
         debug {
             applicationIdSuffix ".debug"
+            debuggable false
         }
         raptor releaseTemplate >> { // the ">>" concatenates the raptor-specific options with the template
             applicationIdSuffix ".raptor"
@@ -196,6 +197,7 @@ if (project.hasProperty("telemetry") && project.property("telemetry") == "true")
 }
 
 dependencies {
+
     implementation Deps.mozilla_concept_engine
     implementation Deps.mozilla_concept_menu
     implementation Deps.mozilla_concept_tabstray

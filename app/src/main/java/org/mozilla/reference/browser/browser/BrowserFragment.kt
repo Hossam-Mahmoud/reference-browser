@@ -6,6 +6,7 @@ package org.mozilla.reference.browser.browser
 
 import android.os.Bundle
 import android.view.View
+import android.view.ViewStub
 import androidx.preference.PreferenceManager
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import mozilla.components.browser.awesomebar.BrowserAwesomeBar
@@ -30,7 +31,7 @@ import org.mozilla.reference.browser.tabs.TabsTrayFragment
  */
 class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
     private val thumbnailsFeature = ViewBoundFeatureWrapper<BrowserThumbnails>()
-    private val readerViewFeature = ViewBoundFeatureWrapper<ReaderViewIntegration>()
+    private val readerViewFeature = ViewBoundFeatureWrapper<OptimizedReaderViewIntegration>()
     private val webExtToolbarFeature = ViewBoundFeatureWrapper<WebExtensionToolbarFeature>()
 
     private val awesomeBar: BrowserAwesomeBar
@@ -43,6 +44,11 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
         get() = requireView().findViewById(R.id.readerViewBar)
     private val readerViewAppearanceButton: FloatingActionButton
         get() = requireView().findViewById(R.id.readerViewAppearanceButton)
+
+    private val readerViewBarStub: ViewStub
+        get() = requireView().findViewById(R.id.stubReaderViewBar)
+    private val readerViewButtonStub: ViewStub
+        get() = requireView().findViewById(R.id.stubReaderViewButton)
 
     override val shouldUseComposeUI: Boolean
         get() = PreferenceManager.getDefaultSharedPreferences(requireContext()).getBoolean(
@@ -98,13 +104,13 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
         )
 
         readerViewFeature.set(
-            feature = ReaderViewIntegration(
+            feature = OptimizedReaderViewIntegration(
                 requireContext(),
                 requireComponents.core.engine,
                 requireComponents.core.store,
                 toolbar,
-                readerViewBar,
-                readerViewAppearanceButton
+                readerViewBarStub,
+                readerViewButtonStub
             ),
             owner = this,
             view = view
