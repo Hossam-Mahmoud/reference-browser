@@ -37,6 +37,7 @@ android {
     buildTypes {
         debug {
             applicationIdSuffix ".debug"
+            debuggable false
         }
         raptor releaseTemplate >> { // the ">>" concatenates the raptor-specific options with the template
             applicationIdSuffix ".raptor"
@@ -266,8 +267,12 @@ dependencies {
     implementation Deps.mozilla_lib_push_firebase
     implementation Deps.mozilla_lib_publicsuffixlist
     implementation Deps.mozilla_lib_dataprotect
+    implementation Deps.mozilla_lib_fetchokhttp
 
     implementation Deps.thirdparty_sentry
+    implementation Deps.thirdparty_okhttp
+    implementation Deps.thirdparty_jsoup
+    implementation Deps.thirdparty_androidasync
 
     implementation Deps.kotlin_stdlib
     implementation Deps.kotlin_coroutines

@@ -22,6 +22,9 @@ private object Versions {
     const val mozilla_android_components = AndroidComponents.VERSION
 
     const val thirdparty_sentry = "1.7.10"
+    const val thirdparty_okhttp = "3.13.1"
+    const val thirdparty_jsoup = "1.13.1"
+    const val thirdparty_androidasync = "2.0.0"
 
     const val espresso_core = "3.1.0"
     const val espresso_version = "3.1.0"
@@ -114,8 +117,13 @@ object Deps {
     const val mozilla_lib_push_firebase = "org.mozilla.components:lib-push-firebase:${Versions.mozilla_android_components}"
     const val mozilla_lib_dataprotect = "org.mozilla.components:lib-dataprotect:${Versions.mozilla_android_components}"
     const val mozilla_lib_publicsuffixlist = "org.mozilla.components:lib-publicsuffixlist:${Versions.mozilla_android_components}"
+    const val mozilla_lib_fetchokhttp = "org.mozilla.components:lib-fetch-okhttp:${Versions.mozilla_android_components}"
+
 
     const val thirdparty_sentry = "io.sentry:sentry-android:${Versions.thirdparty_sentry}"
+    const val thirdparty_okhttp = "com.squareup.okhttp3:okhttp:${Versions.thirdparty_okhttp}"
+    const val thirdparty_jsoup = "org.jsoup:jsoup:${Versions.thirdparty_jsoup}"
+    const val thirdparty_androidasync = "com.koushikdutta.async:androidasync:${Versions.thirdparty_androidasync}"
 
     const val androidx_appcompat = "androidx.appcompat:appcompat:${Versions.androidx_appcompat}"
     const val androidx_core_ktx = "androidx.core:core-ktx:${Versions.AndroidX.core}"

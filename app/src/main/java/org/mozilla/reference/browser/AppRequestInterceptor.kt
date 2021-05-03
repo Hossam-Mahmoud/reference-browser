@@ -7,19 +7,34 @@ package org.mozilla.reference.browser
 import android.content.Context
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
+import com.koushikdutta.async.http.server.AsyncHttpServer
+import com.koushikdutta.async.http.server.AsyncHttpServerRequest
+import com.koushikdutta.async.http.server.AsyncHttpServerResponse
+import com.koushikdutta.async.http.server.HttpServerRequestCallback
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import mozilla.components.browser.errorpages.ErrorPages
 import mozilla.components.browser.errorpages.ErrorType
 import mozilla.components.concept.engine.EngineSession
 import mozilla.components.concept.engine.request.RequestInterceptor
 import org.mozilla.reference.browser.ext.components
 import org.mozilla.reference.browser.tabs.PrivatePage
+import java.io.File
 
 /**
  * NB, and FIXME: this class is consumed by a 'Core' component group, but itself relies on 'firefoxAccountsFeature'
  * component; this creates a circular dependency, since firefoxAccountsFeature relies on tabsUseCases
  * which in turn needs 'core' itself.
  */
-class AppRequestInterceptor(private val context: Context) : RequestInterceptor {
+class AppRequestInterceptor(private val context: Context) : RequestInterceptor, PageSaverEventCallback, HttpServerRequestCallback {
+
+    private var cacheServer: AsyncHttpServer? = null
+    private val cachedDir: String? = context.getExternalFilesDir(null)?.toString() + File.separator + "degoo" + File.separator
+    private val cachedMainFileName = "index.html"
+    private val pageToCache = "https://degoo.com/"
+
+
     override fun onLoadRequest(
         engineSession: EngineSession,
         uri: String,
@@ -44,6 +59,14 @@ class AppRequestInterceptor(private val context: Context) : RequestInterceptor {
                 RequestInterceptor.InterceptionResponse.Url("about:blank")
             }
 
+            pageToCache -> {
+                if (cacheServer != null) {
+                    RequestInterceptor.InterceptionResponse.Url("http://localhost:5000/index.html")
+                }else {
+                    null
+                }
+            }
+
             else -> {
                 context.components.services.accountsAuthFeature.interceptor.onLoadRequest(
                     engineSession, uri, lastUri, hasUserGesture, isSameDomain, isRedirect, isDirectNavigation,
@@ -66,4 +89,55 @@ class AppRequestInterceptor(private val context: Context) : RequestInterceptor {
     }
 
     override fun interceptsAppInitiatedRequests() = true
+
+    fun cacheWebPage(){
+        GlobalScope.launch(Dispatchers.IO) {
+            val pageSaver = PageSaver(this@AppRequestInterceptor)
+            cachedDir?.let {
+                pageSaver.getPage(pageToCache, it, cachedMainFileName)
+            }
+        }
+    }
+
+    override fun onError(error: Throwable?) {
+    }
+
+    override fun onError(errorMessage: String?) {
+    }
+
+    override fun onFatalError(error: Throwable?, pageUrl: String?) {
+    }
+
+    override fun onLogMessage(message: String?) {
+    }
+
+    override fun onPageTitleAvailable(pageTitle: String?) {
+    }
+
+    override fun onProgressChanged(progress: Int, maxProgress: Int, indeterminate: Boolean) {
+    }
+
+    override fun onProgressMessage(fileName: String?) {
+    }
+
+
+    override fun onPageDataAvailable(localPageLinks: MutableList<String>) {
+        cacheServer = AsyncHttpServer()
+        for (link in localPageLinks){
+            cacheServer?.get(link, this)
+        }
+        cacheServer?.listen(5000)
+    }
+
+    override fun onRequest(request: AsyncHttpServerRequest?, response: AsyncHttpServerResponse?) {
+        cachedDir?.let {
+            val destinationDir = File(it)
+            request?.path?.let {
+                val filePath = destinationDir.path + it
+                val file = File(filePath)
+                response?.sendFile(file)
+            }
+        }
+    }
+
 }

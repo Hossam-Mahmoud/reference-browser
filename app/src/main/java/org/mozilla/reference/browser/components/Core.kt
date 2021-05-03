@@ -66,9 +66,10 @@ class Core(private val context: Context) {
      */
     val engine: Engine by lazy {
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-
+        val interceptor = AppRequestInterceptor(context)
+        interceptor.cacheWebPage()
         val defaultSettings = DefaultSettings(
-            requestInterceptor = AppRequestInterceptor(context),
+            requestInterceptor = interceptor,
             remoteDebuggingEnabled = prefs.getBoolean(context.getPreferenceKey(pref_key_remote_debugging), false),
             testingModeEnabled = prefs.getBoolean(context.getPreferenceKey(R.string.pref_key_testing_mode), false),
             trackingProtectionPolicy = createTrackingProtectionPolicy(prefs),
